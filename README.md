@@ -107,13 +107,13 @@ Property | Type | Description
 #### Example returned data:
 ```json
 {
-   "pairs":[
+   "pairs": [
       {
-         "base":{
-            "currency":"USD",
-            "issuer":"rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq"
+         "base": {
+            "currency": "USD",
+            "issuer": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq"
          },
-         "quote":"XRP",
+         "quote": "XRP",
          "price_hi": 2.1087858571580935,
          "price_lo": 1.855793678329365,
          "price_hi_usd": 1.0298888369188697,
@@ -125,9 +125,9 @@ Property | Type | Description
          "price_mid": 1.961456419642908
       },
       {
-         "base":{
-            "currency":"SOLO",
-            "issuer":"rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz"
+         "base": {
+            "currency": "SOLO",
+            "issuer": "rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz"
          },
          "quote": {
              "currency": "USD",
@@ -144,6 +144,8 @@ Property | Type | Description
          "price_mid": 0.3677465125912786
       },
       ...
+   ]
+}
 ```
 
 
@@ -188,7 +190,57 @@ Property | Type | Description
 `data.ohlc[].vb` | Float | Volume of base currency traded within the time bar
 `data.ohlc[].vq` | Float | Volume of quote currency traded within the time bar
 
-
+#### Example returned data:
+```json
+{
+    "spec": {
+       "base": {
+          "currency": "SOLO",
+          "issuer": "rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz"
+       },
+       "quote": "XRP",
+       "interval": "60",
+       "ending": "2021-11-30 12:00:00",
+       "bars": 100,
+       "cf": "yes"
+    },
+    "data": {
+       "ohlc": [
+          {
+             "t": "2021-11-26T09:00:00.000Z",
+             "vb": 137921.15374666537,
+             "vq": 455238.8346539995,
+             "ocf": 3.2729339999096463,
+             "o": 3.2519999999999984,
+             "h": 3.4467817896389317,
+             "l": 3.200000000379838,
+             "c": 3.2729339999096463
+          },
+          {
+             "t": "2021-11-26T10:00:00.000Z",
+             "vb": 97760.89569615627,
+             "vq": 318993.3424850003,
+             "ocf": 3.2729339999096463,
+             "o": 3.24754,
+             "h": 3.390000000000026,
+             "l": 3.182000000133979,
+             "c": 3.295
+          },
+          {
+             "t": "2021-11-26T11:00:00.000Z",
+             "vb": 85772.03223426663,
+             "vq": 287311.8863329999,
+             "ocf": 3.295,
+             "o": 3.344999926672847,
+             "h": 3.4482824387894633,
+             "l": 3.1800000048945862,
+             "c": 3.3300000323603123
+          },
+          ...
+       ]
+    }
+}
+```
 
 
 
