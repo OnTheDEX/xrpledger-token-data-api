@@ -10,6 +10,8 @@ This API offers accurate and up-to-date token trading data for all tokens traded
 The endpoint to use is:
 `https://api.onthedex.live/public/v1`
 
+---
+
 ## Data Paths
 ### `GET`: `/daily/tokens`
 Returns a **list of tokens traded** on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.  Max returned items is 100, which in combination with the `by` parameter, allows getting the top 100 by volume, market cap, or trade count.
