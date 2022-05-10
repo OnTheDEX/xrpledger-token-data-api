@@ -104,6 +104,50 @@ Property | Type | Description
 `pairs[].price_lo_usd` | Float | The lowest USD equivalent price achieved across all trades of this pair
 `pairs[].num_trades` | Integer | Total number of individual trades on this pair
 
+#### Example returned data:
+```json
+{
+   "pairs":[
+      {
+         "base":{
+            "currency":"USD",
+            "issuer":"rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq"
+         },
+         "quote":"XRP",
+         "price_hi": 2.1087858571580935,
+         "price_lo": 1.855793678329365,
+         "price_hi_usd": 1.0298888369188697,
+         "price_lo_usd": 0.9611753839564439,
+         "volume_base": 686448.7278266628,
+         "volume_quote": 1357644.3154369998,
+         "volume_usd": 685024.8424382539,
+         "num_trades": 735,
+         "price_mid": 1.961456419642908
+      },
+      {
+         "base":{
+            "currency":"SOLO",
+            "issuer":"rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz"
+         },
+         "quote": {
+             "currency": "USD",
+             "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+         },
+         "price_hi": 0.3721380025654514,
+         "price_lo": 0.3494645474548932,
+         "price_hi_usd": 0.3721380025654514,
+         "price_lo_usd": 0.3494645474548932,
+         "volume_base": 439.0692277673208,
+         "volume_quote": 158.66133547013885,
+         "volume_usd": 158.66133547013885,
+         "num_trades": 6,
+         "price_mid": 0.3677465125912786
+      },
+      ...
+```
+
+
+
 
 
 ## `GET`: `/ohlc`
