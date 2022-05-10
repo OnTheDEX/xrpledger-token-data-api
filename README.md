@@ -12,8 +12,10 @@ The endpoint to use is:
 
 ---
 
-## Data Paths
-### `GET`: `/daily/tokens`
+# Data Paths
+
+## `GET`: `/daily/tokens`
+
 Returns a **list of tokens traded** on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.  Max returned items is 100, which in combination with the `by` parameter, allows getting the top 100 by volume, market cap, or trade count.
 
 #### GET parameters to specify:
@@ -38,7 +40,7 @@ Property | Type | Description
 `tokens[].suppy` | Float | Total number of tokens under supply obligation by the issuing account
 
 
-### `GET`: `/daily/pairs`
+## `GET`: `/daily/pairs`
 Returns a **list of pairs (base / quote) traded** on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.
 
 #### GET parameters to specify:
@@ -69,7 +71,7 @@ Property | Type | Description
 
 
 
-### `GET`: `/ohlc`
+## `GET`: `/ohlc`
 Returns **Open/High/Low/Close price data** for a given token pairing for a given timeframe interval.
 
 #### GET parameters to specify:
