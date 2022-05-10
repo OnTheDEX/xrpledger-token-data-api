@@ -17,7 +17,7 @@ Returns a list of tokens traded on the XRP Ledger DEX at any time within the las
 #### GET parameters to specify:
 Parameter | Specification | Description
 --- | --- | ---
-`by` | `volume` (traded volume in USD equivalent value), `market_cap` (market capitalization, in USD), `trades` (number of trades) | Sorts the returned token list by the parameter specified, in descending order.  Default: `volume`
+`by` | `volume` (traded volume in USD equivalent value), `market_cap` (market capitalization, in USD), or `trades` (number of trades) | Sorts the returned token list by the parameter specified, in descending order.  Default: `volume`
 `min_trades` | Integer | Filter the tokens returned to include only those tokens that have traded the specified number of times or more in the last 24 hours.  Use to exclude illiquid tokens particularly when ordering `by`=`market_cap`.  Default: `100`
 
 #### Returned properties:
@@ -68,14 +68,14 @@ Property | Type | Description
 
 
 ### `GET`: `/ohlc`
-Returns Open/High/Low/Close price data for a given token pairing for a given timeframe.
+Returns Open/High/Low/Close price data for a given token pairing for a given timeframe interval.
 
 #### GET parameters to specify:
 Parameter | Specification | Description
 --- | --- | ---
 `base` | String | Concatenation of base currency code and issuing account with a period `.` separator.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
 `quote` | String | Concatenation of quote currency code and issuing account with a period `.` separator.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
-`interval` | `5`, `15`, `60`, `240`, `D`, `W` | Interval timeframe for which OHLC data is required.  Integer values represent timeframe in minutes.
+`interval` | `5`, `15`, `60`, `240`, `D`, or `W` | Interval timeframe for which OHLC data is required.  Integer values represent timeframe in minutes.
 `ending` | Timestamp (optional) | The timestamp representing the last time bar to return.  If not specified, current time is used.  Examples: `2021-12-25T14:00:00Z`, `2022-01-01`, `2022-03-15 12:00:00`
 `bars` | Integer | Number of bars of data to return, starting from the `ending` time and moving backwards for this number of bars.  Default varies depending on specified `tf`
 `cf` | `yes` (optional) | Flag for requesting the carry-forward open price.  If set to `yes`, returns an extra property `ocf` for each time bar (see below)
