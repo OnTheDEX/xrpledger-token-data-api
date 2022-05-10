@@ -42,32 +42,32 @@ Property | Type | Description
 `tokens[].suppy` | Float | Total number of tokens under supply obligation by the issuing account
 
 #### Example returned data:
-```
+```json
 {
-    tokens: [
+    "tokens": [
         {
-            currency: "USD",
-            issuer: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-            last_trade_at: "2022-05-10T15:05:42.000Z",
-            market_cap: 32878521,
-            num_trades: 768,
-            price_mid_usd: 1.0055049538537304,
-            supply: 32698516.82373998,
-            token_name: "Bitstamp USD",
-            volume_token: 774648.164521166,
-            volume_usd: 776031.2081952752
+            "currency": "USD",
+            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+            "last_trade_at": "2022-05-10T15:05:42.000Z",
+            "market_cap": 32878521,
+            "num_trades": 768,
+            "price_mid_usd": 1.0055049538537304,
+            "supply": 32698516.82373998,
+            "token_name": "Bitstamp USD",
+            "volume_token": 774648.164521166,
+            "volume_usd": 776031.2081952752
         },
         {
-            currency: "SOLO",
-            issuer: "rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz",
-            last_trade_at: "2022-05-10T15:14:52.000Z",
-            market_cap: 146978419,
-            num_trades: 2850,
-            price_mid_usd: 0.36781515699146133,
-            supply: 399598591.6977495,
-            token_name: "Sologenic",
-            volume_token: 1487728.1869581435,
-            volume_usd: 544250.4805697609,
+            "currency": "SOLO",
+            "issuer": "rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz",
+            "last_trade_at": "2022-05-10T15:14:52.000Z",
+            "market_cap": 146978419,
+            "num_trades": 2850,
+            "price_mid_usd": 0.36781515699146133,
+            "supply": 399598591.6977495,
+            "token_name": "Sologenic",
+            "volume_token": 1487728.1869581435,
+            "volume_usd": 544250.4805697609
         },
         ...
     ]
