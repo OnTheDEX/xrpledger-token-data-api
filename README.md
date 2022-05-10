@@ -58,7 +58,7 @@ Property | Type | Description
 `pairs[].volume_base` | Float | Volume of the base token traded this pair
 `pairs[].volume_quote` | Float | Volume of the quote token traded this pair
 `pairs[].volume_usd` | Float | Volume of USD equivalent value traded this pair
-`pairs[].price_mid` | Float | Current mid price on the order books of the token in this pairing.  If no orders on both sides of the book for this pair, result is `null`
+`pairs[].price_mid` | Float | Current mid price on the order books of this pairing.  If no orders on both sides of the book for this pair, result is `null`
 `pairs[].price_hi` | Float | The highest price achieved across all trades of this pair
 `pairs[].price_lo` | Float | The lowest price achieved across all trades of this pair
 `pairs[].price_hi_usd` | Float | The highest USD equivalent price achieved across all trades of this pair
