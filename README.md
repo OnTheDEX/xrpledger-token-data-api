@@ -37,7 +37,7 @@ Property | Type | Description
 
 
 ### `GET`: `/daily/pairs`
-Returns a list of tokens  traded on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.
+Returns a list of pairs (base / quote) traded on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.
 
 #### GET parameters to specify:
 Parameter | Specification | Description
