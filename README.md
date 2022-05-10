@@ -7,8 +7,10 @@ This API offers accurate and up-to-date token trading data for all tokens traded
 * Personal projects eg. importation of token data into your portfolio tracking spreadsheets using Excel or Google Sheets, for example.
 
 ## Endpoint for access
+The endpoint to use is:
 `https://api.onthedex.live/public/v1`
 
+## Data Paths
 ### `GET`: `/daily/tokens`
 Returns a list of tokens  traded on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.
 
