@@ -67,3 +67,45 @@ Property | Type | Description
 
 
 
+### `GET`: `/ohlc`
+Returns Open/High/Low/Close price data for a given token pairing for a given timeframe.
+
+#### GET parameters to specify:
+Parameter | Specification | Description
+--- | --- | ---
+`base` | String | Concatenation of base currency code and issuing account with a period `.` separator.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
+`quote` | String | Concatenation of quote currency code and issuing account with a period `.` separator.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
+`interval` | `5`, `15`, `60`, `240`, `D`, `W` | Interval timeframe for which OHLC data is required.  Integer values represent timeframe in minutes.
+`ending` | Timestamp (optional) | The timestamp representing the last time bar to return.  If not specified, current time is used.  Examples: `2021-12-25T14:00:00Z`, `2022-01-01`, `2022-03-15 12:00:00`
+`bars` | Integer | Number of bars of data to return, starting from the `ending` time and moving backwards for this number of bars.  Default varies depending on specified `tf`
+`cf` | `yes` (optional) | Flag for requesting the carry-forward open price.  If set to `yes`, returns an extra property `ocf` for each time bar (see below)
+
+#### Returned properties:
+Property | Type | Description
+--- | --- | ---
+`spec` | Object | The interpreted specification from the passed parameters; what the API determined to be your request
+`spec.base` | **or** Object | If base currency is XRP, this contains the string `XRP`.  In all other cases, and object is returned with `currency` and `issuer` properties
+`spec.base.currency` | String | Currency code of the base token
+`spec.base.issuer` | String | r-Address of the base token issuer
+`spec.quote` | String **or** Object | If quote currency is XRP, this contains the string `XRP`.  In all other cases, an object is returned with `currency` and `issuer` properties
+`spec.quote.currency` | String | Currency code of the quote token
+`spec.quote.issuer` | String | r-Address of the quote token issuer
+`spec.interval` | String | Interval timeframe
+`spec.ending` | Timestamp | The passed `ending` parameter
+`spec.bars` | Integer | The number of bars queried for.  Should be equal to the number of `data.ohlc` items returned.
+`spec.cf` | String | The passed `cf` parameter
+`data` | Object | The main returned data object
+`data.ohlc[]` | Array | List of OHLC price bar data in ascending time order
+`data.ohlc[].t` | ISO Timestamp | Timestamp in GMT of the opening time of the price bar
+`data.ohlc[].o` | Float | Opening trading price of the time bar
+`data.ohlc[].h` | Float | Highest trading price within the time bar
+`data.ohlc[].l` | Float | Lowest trading price within the time bar
+`data.ohlc[].c` | Float | Closing trading price of the time bar
+`data.ohlc[].ocf` | Float | If `cf` was set to `yes`, this property contains the closing price of the previous bar to be used in client applications as the opening price of this bar.  This is distinct from the `o` price of this bar and permits the representation of this time bar opening at the same price the previous bar closed at, effectively ensuring there are no price 'gaps' in data bar-to-bar due to illiquid price jumps.
+`data.ohlc[].vb` | Float | Volume of base currency traded within the time bar
+`data.ohlc[].vq` | Float | Volume of quote currency traded within the time bar
+
+
+
+
+
