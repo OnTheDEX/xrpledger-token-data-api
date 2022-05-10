@@ -18,7 +18,7 @@ Returns a list of tokens traded on the XRP Ledger DEX at any time within the las
 Parameter | Specification | Description
 --- | --- | ---
 `by` | `volume` (traded volume in USD equivalent value), `market_cap` (market capitalization, in USD), `trades` (number of trades) | Sorts the returned token list by the parameter specified, in descending order.  Default: `volume`
-`min_trades` | Integer | Filter the tokens returned to include only those tokens that have traded the specified number of times or more in the last 24 hours.  Use to exclude illiquid tokens particular when ordering `by` market_cap.  Default: `100`
+`min_trades` | Integer | Filter the tokens returned to include only those tokens that have traded the specified number of times or more in the last 24 hours.  Use to exclude illiquid tokens particularly when ordering `by`=`market_cap`.  Default: `100`
 
 #### Returned properties:
 Property | Type | Description
