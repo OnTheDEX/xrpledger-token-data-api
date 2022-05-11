@@ -188,7 +188,7 @@ Property | Type | Description
 `spec.tf` | String | The passed `tf` parameter
 `data` | Object | The main returned data object
 `data.ohlc[]` | Array | List of OHLC price bar data in ascending time order
-`data.ohlc[].t` | ISO Timestamp | Timestamp in GMT of the opening time of the price bar
+`data.ohlc[].t` | Integer or ISO Timestamp | UNIX Timestamp (default when `tf` not set) or ISO Timestamp (if `tf`=`ISO`) in GMT of the opening time of the price bar
 `data.ohlc[].o` | Float | Opening trading price of the time bar.  If `cf` was set to `yes`, this property contains the closing price of the previous bar, and is distinct from the original pairing `o` price of this bar.  It permits the representation of this time bar opening at the same price the previous bar closed at, effectively ensuring there are no price 'gaps' in data bar-to-bar due to illiquid price jumps.
 `data.ohlc[].h` | Float | Highest trading price within the time bar
 `data.ohlc[].l` | Float | Lowest trading price within the time bar
