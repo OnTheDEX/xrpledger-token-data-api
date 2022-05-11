@@ -12,6 +12,9 @@ This API offers accurate and up-to-date token trading data for all tokens traded
 The endpoint to use is:
 `https://api.onthedex.live/public/v1`
 
+## Things to know
+* All times in GMT
+
 ---
 
 # Data Paths
@@ -161,6 +164,7 @@ Parameter | Specification | Description
 `base` | String | Concatenation of base currency code and issuing account with a period `.` separator.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
 `quote` | String | Concatenation of quote currency code and issuing account with a period `.` separator.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
 `interval` | `5`, `15`, `60`, `240`, `D`, or `W` | Interval timeframe for which OHLC data is required.  Integer values represent timeframe in minutes.
+`tf` | `ISO` (optional) | Time format to return.  Default is UNIX timestamp in seconds since epoch.  Setting `ISO` returns string of ISO format time per bar instead.
 `ending` | Timestamp (optional) | The timestamp representing the last time bar to return.  If not specified, current time is used.  Examples: `2021-12-25T14:00:00Z`, `2022-01-01`, `2022-03-15 12:00:00`
 `bars` | Integer | Number of bars of data to return, starting from the `ending` time and moving backwards for this number of bars.  Default varies depending on specified `tf`.  Maximum returned bars is 1000 per call.
 `cf` | `yes` (optional) | Flag for requesting the carry-forward open price.  If set to `yes`, modifies the open `o` property returned for each time bar (see below)
@@ -181,6 +185,7 @@ Property | Type | Description
 `spec.bars` | Integer | The number of bars queried for.  Should be equal to the number of `data.ohlc` items returned.
 `spec.cf` | String | The passed `cf` parameter
 `spec.fx` | String | The passed `fx` parameter
+`spec.tf` | String | The passed `tf` parameter
 `data` | Object | The main returned data object
 `data.ohlc[]` | Array | List of OHLC price bar data in ascending time order
 `data.ohlc[].t` | ISO Timestamp | Timestamp in GMT of the opening time of the price bar
@@ -204,7 +209,8 @@ Property | Type | Description
        "interval": "60",
        "ending": "2021-11-30 12:00:00",
        "bars": 100,
-       "cf": "yes"
+       "cf": "yes",
+       "tf": "ISO"
     },
     "data": {
        "ohlc": [
