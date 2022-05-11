@@ -241,5 +241,9 @@ Property | Type | Description
 }
 ```
 
+#### Difference between `cf` open and normal open price:
+This first image below shows the effect of `cf` being unset, where the `o`pen price is unaffected by the previous bar values.  Where price gaps exist bar-to-bar, they will be shown as a result:
+![Normal Open Prices](/images/example_normal_open_prices.png?raw=true "Normal Open Prices on illiquid token or interval, showing gaps")
 
-
+This second image below shows the effect of specifying `cf`=`yes`, to close the gap between bars where there would otherwise be a gap.  The previous bar's close price is carried forward to be the current bar's open price:
+![Adjusted Open Prices](/images/example_open_prices_with_cf_flag.png?raw=true "Adjusted Open Prices with carried forward open price")
