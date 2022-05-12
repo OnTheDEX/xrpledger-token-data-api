@@ -18,13 +18,16 @@ https://api.onthedex.live/public/v1
 * All times in GMT
 
 
-### Documentation
+## Documentation
 Path | Description
 --- | ---
 [`> [GET: /daily/tokens]`](#get-dailytokens) | Headline Daily Token Data for top 100 traded tokens by volume, market cap or number of trades.
 [`> [GET: /daily/pairs]`](#get-dailypairs) | Headline Daily Traded Pair Data by volume or number of trades.
 [`> [GET: /ohlc]`](#get-ohlc) | Candlestick chart data including Open/High/Low/Close price data, base and quote volumes, for varying intervals.
 
+- See [`> [GET: /daily/tokens]`](#get-dailytokens) for Headline Daily Token Data for top 100 traded tokens by volume, market cap or number of trades.
+- See [`> [GET: /daily/pairs]`](#get-dailypairs) for Headline Daily Traded Pair Data by volume or number of trades.
+- See [`> [GET: /ohlc]`](#get-ohlc) for Candlestick chart data including Open/High/Low/Close price data, base and quote volumes, for varying intervals.
 
 
 ---
