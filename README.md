@@ -42,7 +42,7 @@ Property | Type | Description
 `tokens[].price_mid_usd` | Float | The current mid price in USD equivalent based on the most liquid token pair (currently token/XRP)
 `tokens[].last_trade_at` | ISO Timestamp | Date and time (in GMT) of the last trade of this token across all its pairs
 `tokens[].num_trades` | Integer | Total number of individual trades on this token across all its pairs
-`tokens[].suppy` | Float | Total number of tokens under supply obligation by the issuing account
+`tokens[].supply` | Float | Total number of tokens under supply obligation by the issuing account
 
 #### Example returned data:
 ```json
