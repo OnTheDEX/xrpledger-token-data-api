@@ -170,7 +170,7 @@ Returns **Open/High/Low/Close price data** for a given token pairing for a given
 
 #### Example:
 ```
-https://api.onthedex.live/public/v1/ohlc?base=CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr&quote=XRP&bars=100&interval=60
+https://api.onthedex.live/public/v1/ohlc?base=CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr&quote=XRP&bars=100&interval=60(https://api.onthedex.live/public/v1/ohlc?base=CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr&quote=XRP&bars=100&interval=60)
 ```
 
 #### GET parameters to specify:
