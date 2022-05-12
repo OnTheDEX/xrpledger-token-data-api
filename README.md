@@ -165,8 +165,8 @@ Parameter | Specification | Description
 `quote` | String | Concatenation of quote currency code and issuing account with a period `.` separator.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
 `interval` | `5`, `15`, `60`, `240`, `D`, or `W` | Interval timeframe for which OHLC data is required.  Integer values represent timeframe in minutes.
 `tf` | `ISO` (optional) | Time format to return.  Default is UNIX timestamp in seconds since epoch.  Setting `ISO` returns string of ISO format time per bar instead.
-`ending` | Timestamp (optional) | The timestamp representing the last time bar to return.  If not specified, current time is used.  Examples: `2021-12-25T14:00:00Z`, `2022-01-01`, `2022-03-15 12:00:00`
-`bars` | Integer | Number of bars of data to return, starting from the `ending` time and moving backwards for this number of bars.  Default varies depending on specified `tf`.  Maximum returned bars is 1000 per call.
+`ending` | String or Integer (optional) | A string timestamp, or UNIX timestamp in seconds, representing the last time bar to return.  If not specified, current time is used.  Examples: `2021-12-25T14:00:00Z`, `2022-01-01`, `2022-03-15 12:00:00`, `1652054400`
+`bars` | Integer | Number of bars of data to return, starting from the `ending` time and moving backwards for this number of bars.  Default varies depending on specified `tf`.  Maximum returned bars is 5000 per call.
 `cf` | `yes` (optional) | Flag for requesting the carry-forward open price.  If set to `yes`, modifies the open `o` property returned for each time bar (see below)
 `fx` | `USD` (optional) | If set, returns the OHLC data converted to forex equivalent (USD equivalent only presently) to show this pairing relative to USD
 
