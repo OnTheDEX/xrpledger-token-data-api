@@ -174,7 +174,7 @@ Parameter | Specification | Description
 Property | Type | Description
 --- | --- | ---
 `spec` | Object | The interpreted specification from the passed parameters; what the API determined to be your request
-`spec.base` | **or** Object | If base currency is XRP, this contains the string `XRP`.  In all other cases, and object is returned with `currency` and `issuer` properties
+`spec.base` | String **or** Object | If base currency is XRP, this contains the string `XRP`.  In all other cases, and object is returned with `currency` and `issuer` properties
 `spec.base.currency` | String | Currency code of the base token
 `spec.base.issuer` | String | r-Address of the base token issuer
 `spec.quote` | String **or** Object | If quote currency is XRP, this contains the string `XRP`.  In all other cases, an object is returned with `currency` and `issuer` properties
