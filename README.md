@@ -30,8 +30,12 @@ Path | Description
 # Data Paths
 
 ## `GET`: `/daily/tokens`
-
 Returns a **list of tokens traded** on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.  Max returned items is 100, which in combination with the `by` parameter, allows getting the top 100 by volume, market cap, or trade count.
+
+#### Example:
+```
+https://api.onthedex.live/public/v1/daily/tokens
+```
 
 #### GET parameters to specify:
 Parameter | Specification | Description
@@ -90,6 +94,11 @@ Property | Type | Description
 
 ## `GET`: `/daily/pairs`
 Returns a **list of pairs (base / quote) traded** on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.
+
+#### Example:
+```
+https://api.onthedex.live/public/v1/daily/pairs?token=CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr
+```
 
 #### GET parameters to specify:
 Parameter | Specification | Description
@@ -178,12 +187,13 @@ Parameter | Specification | Description
 --- | --- | ---
 `base` | String | Concatenation of base currency code and issuing account with a period `.` separator.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
 `quote` | String | Concatenation of quote currency code and issuing account with a period `.` separator.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
-`interval` | `5`, `15`, `60`, `240`, `D`, or `W` | Interval timeframe for which OHLC data is required.  Integer values represent timeframe in minutes.
+`interval` | `5`, `15`, `60`, `240`, `D`, or `W` | Interval timeframe for which OHLC data is required.  Integer values represent timeframe in minutes.  Ignored when `marker` is specified.
 `tf` | `ISO` (optional) | Time format to return.  Default is UNIX timestamp in seconds since epoch.  Setting `ISO` returns string of ISO format time per bar instead.
-`ending` | String or Integer (optional) | A string timestamp, or UNIX timestamp in seconds, representing the last time bar to return.  If not specified, current time is used.  Examples: `2021-12-25T14:00:00Z`, `2022-01-01`, `2022-03-15 12:00:00`, `1652054400`
-`bars` | Integer | Number of bars of data to return, starting from the `ending` time and moving backwards for this number of bars.  Default varies depending on specified `tf`.  Maximum returned bars is 5000 per call.
+`ending` | String or Integer (optional) | A string timestamp, or UNIX timestamp in seconds, representing the last time bar to return.  If not specified, current time is used.  Ignored when `marker` is specified.  Examples: `2021-12-25T14:00:00Z`, `2022-01-01`, `2022-03-15 12:00:00`, `1652054400`
+`bars` | Integer | Number of bars of data to return, starting from the `ending` time and moving backwards for this number of bars.  Default varies depending on specified `tf`.  Maximum returned bars is 5000 per call.  Ignored when `marker` is specified.
 `cf` | `yes` (optional) | Flag for requesting the carry-forward open price.  If set to `yes`, modifies the open `o` property returned for each time bar (see below)
 `fx` | `USD` (optional) | If set, returns the OHLC data converted to forex equivalent (USD equivalent only presently) to show this pairing relative to USD
+`marker` | String (optional) | If set and valid from a previous call, the next set of data backwards in time from the last call is returned.  Mandatory parameters when `marker` is specified are: `base`, `quote`.  Ignored parameters when `marker` is set are: `ending`, `interval`, `bars`.  Other parameters should be specified identical to the original request where relevant.
 
 #### Returned properties:
 Property | Type | Description
@@ -202,6 +212,7 @@ Property | Type | Description
 `spec.fx` | String | The passed `fx` parameter
 `spec.tf` | String | The passed `tf` parameter
 `data` | Object | The main returned data object
+`data.marker` | String | The response includes a marker field when more data of the type requested in the original call exists. To retrieve the next block of data, call this path again with the `marker` field populated with this value.  If no `marker` property is returned, there is no more data to retrieve.  See `marker` parameter above.
 `data.ohlc[]` | Array | List of OHLC price bar data in ascending time order
 `data.ohlc[].t` | Integer or ISO Timestamp | UNIX Timestamp (default when `tf` not set) or ISO Timestamp (if `tf`=`ISO`) in GMT of the opening time of the price bar
 `data.ohlc[].o` | Float | Opening trading price of the time bar.  If `cf` was set to `yes`, this property contains the closing price of the previous bar, and is distinct from the original pairing `o` price of this bar.  It permits the representation of this time bar opening at the same price the previous bar closed at, effectively ensuring there are no price 'gaps' in data bar-to-bar due to illiquid price jumps.
