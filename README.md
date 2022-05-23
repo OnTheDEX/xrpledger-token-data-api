@@ -41,7 +41,11 @@ https://api.onthedex.live/public/v1/daily/tokens
 Parameter | Specification | Description
 --- | --- | ---
 `by` | `volume` (traded volume in USD equivalent value), `market_cap` (market capitalization, in USD), or `trades` (number of trades) | Sorts the returned token list by the parameter specified, in descending order.  Default: `volume`
-`min_trades` | Integer | Filter the tokens returned to include only those tokens that have traded the specified number of times or more in the last 24 hours.  Use to exclude illiquid tokens particularly when ordering `by`=`market_cap`.  Default: `100`
+`min_trades` | Integer | Filter the tokens returned to include only those tokens that have traded the specified number of times or more in the last 24 hours.  Use to exclude illiquid tokens particularly when ordering `by`=`market_cap`.  Default: `100`.  To include all traded tokens, set to `1`.
+`page` | Integer | Data page number to return.  Default is page `1`.
+`per_page` | Integer | Maximum number of results to return for this page.  Default (and max) is `100`.
+
+
 
 #### Returned properties:
 Property | Type | Description
@@ -105,6 +109,8 @@ Parameter | Specification | Description
 --- | --- | ---
 `token` | String, optional | When not specified, returns complete list of traded pairs.  Note that this complete list includes inverted pairs (eg. TOKEN/USD.rhub and USD.rhub/TOKEN) with the same overall metrics for easier access to the pair you might want.  Be sure not to double-count such entries where relevant in your use case.  If `token` is specified as a concatenation of currency code and issuing account with a period `.` separator, returns only those pairs traded against the specified token.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
 `by` | `volume` (traded volume in USD equivalent value), `trades` (number of trades) | Sorts the returned pairs by the parameter specified, in descending order.  Default: `volume`
+`page` | Integer | Data page number to return.  Default is page `1`.
+`per_page` | Integer | Maximum number of results to return for this page.  Default (and max) is `100`.
 
 #### Returned properties:
 Property | Type | Description
