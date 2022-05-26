@@ -23,7 +23,7 @@ Path | Description
 --- | ---
 [`/daily/tokens`](#get-dailytokens) | Headline Daily Token Data for top 100 traded tokens by volume, market cap or number of trades.
 [`/daily/pairs`](#get-dailypairs) | Headline Daily Traded Pair Data by volume or number of trades.
-[`/aggregator`](#get-post-aggregator) | Aggregator data for all tokens traded in the last rolling 24 hours, including token metrics, fiat USD equivalent pricing and volumes, and individual token pairing data.
+[`/aggregator`](#getpost-aggregator) | Aggregator data for all tokens traded in the last rolling 24 hours, including token metrics, fiat USD equivalent pricing and volumes, and individual token pairing data.
 [`/ohlc`](#get-ohlc) | Candlestick chart data including Open/High/Low/Close price data, base and quote volumes, for varying intervals.
 
 ---
