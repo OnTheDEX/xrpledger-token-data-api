@@ -3,8 +3,8 @@
 ![OnTheDex Logo](https://onthedex.live/onthedex_logo_simple.svg)
 
 ## About this API
-This API offers accurate and up-to-date token trading data for all tokens traded on the XRP Ledger DEX.  It is accessible to anyone.  Particular use cases might include:
-* Cryptocurrency Aggregator sites such as CMC, CoinGecko, LiveCoinWatch and others.  Use this API to secure your data feed for any and all tokens traded on the XRP Ledger.
+This API offers accurate and up-to-date token trading data for all tokens traded on the XRP Ledger DEX.  The data source is the XRP Ledger itself.  This API is accessible to anyone.  Particular use cases might include:
+* Cryptocurrency Aggregator sites such as CMC, CoinGecko, LiveCoinWatch and others.  Such sites can use this API to secure a data feed for any and all tokens traded on the XRP Ledger.
 * Projects needing specific token data such as trading volume, current price, or historic OHLC price data.
 * Personal projects eg. importation of token data into your portfolio tracking spreadsheets using Excel or Google Sheets, for example.
 
@@ -23,6 +23,7 @@ Path | Description
 --- | ---
 [`/daily/tokens`](#get-dailytokens) | Headline Daily Token Data for top 100 traded tokens by volume, market cap or number of trades.
 [`/daily/pairs`](#get-dailypairs) | Headline Daily Traded Pair Data by volume or number of trades.
+[`/aggregator`](#get-post-aggregator) | Aggregator data for all tokens traded in the last rolling 24 hours, including token metrics, fiat USD equivalent pricing and volumes, and individual token pairing data.
 [`/ohlc`](#get-ohlc) | Candlestick chart data including Open/High/Low/Close price data, base and quote volumes, for varying intervals.
 
 ---
@@ -121,7 +122,7 @@ Property | Type | Description
 `pairs[].base.issuer` | String | r-Address of the base token issuer
 `pairs[].quote` | String **or** Object | If quote currency is XRP, this contains the string `XRP`.  In all other cases, an object is returned with `currency` and `issuer` properties
 `pairs[].quote.currency` | String | Currency code of the quote token
-`pairs[].quote.issuer` | String | r-Address of the quote token issuer
+`pairs[].quote.issuer` | String | r-Address of the quote token issuer (not specified if quote = `XRP`)
 `pairs[].volume_base` | Float | Volume of the base token traded this pair
 `pairs[].volume_quote` | Float | Volume of the quote token traded this pair
 `pairs[].volume_usd` | Float | Volume of USD equivalent value traded this pair
@@ -174,6 +175,197 @@ Property | Type | Description
       ...
    ]
 }
+```
+
+
+
+## `GET`/`POST`: `/aggregator`
+Returns a **list of aggregator data** for all tokens traded on the XRP Ledger DEX at any time within the last rolling 24 hours, together with each token's pairings and associated key metrics.
+
+#### GET Example:
+```
+GET https://api.onthedex.live/public/v1/aggregator
+```
+
+#### POST Example:
+```
+curl -d '{"tokens": [{"currency": "CSC", "issuer": "rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr"}, "SOLO.rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz"]}' -X POST https://api.onthedex.live/public/v1/aggregator
+```
+
+#### GET/POST parameters to specify:
+Parameter | Specification | Description
+--- | --- | ---
+`token` | String, `GET` only | If specified, returns the aggregator just for the specified token.  Example: `SOLO.rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz`
+`tokens` | Array of Object or String, `POST` only | If specified, returns the aggregator for the specified token(s) only.  The array can contain tokens in a mixture of formats: objects with `currency` and `issuer` properties, and/or strings with period-separated currency and issuer.  Example: `[{"currency": "CSC", "issuer": "rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr"}, "SOLO.rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz"]`
+
+#### Returned properties:
+Property | Type | Description
+--- | --- | ---
+`tokens` | Array | List of tokens returned
+`tokens[].currency` | String | Currency code of the base token
+`tokens[].issuer` | String | r-Address of the base token issuer
+`tokens[].name` | String | Official name of the token, if known
+`tokens[].supply` | Float | Total number of tokens under supply obligation by the issuing account
+`tokens[].market_cap` | Integer | Market capitalization of the token in USD based on current mid price and issued suppy of the token
+`tokens[].dex` | Object | Information on the DEX specific trades for this token
+`tokens[].dex.price` | Float | XRPL DEX current mid price in USD fiat equivalent for the token via most liquid pairing
+`tokens[].dex.pc24` | Float | USD fiat equivalent price change in percent from the price 24 hours ago (rolling)
+`tokens[].dex.fx24` | Float | USD fiat equivalent sum of all trades across all pairs for this token in the last rolling 24 hours
+`tokens[].dex.sum24` | Float | Total volume traded across all pairs for this token in the last rolling 24 hours
+`tokens[].dex.count24` | Integer | Number of trades across all pairs for this token in the last rolling 24 hours
+`tokens[].dex.pairs` | Array | List of pair data traded against this token in the last rolling 24 hours
+`tokens[].dex.pairs[].quote` | String | Currency code of the quote token
+`tokens[].dex.pairs[].issuer` | String | r-Address of the quote token issuer (not specified if quote = `XRP`)
+`tokens[].dex.pairs[].name` | String | Official name of the quote currency, if known
+`tokens[].dex.pairs[].vol_token` | Number | Volume of token currency traded in the period against this quote currency
+`tokens[].dex.pairs[].vol_quote` | Number | Volume of this quote currency traded in the period against the token currency
+`tokens[].dex.pairs[].last` | Float | Price achieved on most recent trade of the pair
+`tokens[].dex.pairs[].time` | Integer, UNIX timestamp (seconds) | Time of most recent trade of the pair
+`tokens[].dex.pairs[].time` | Float | Time of most recent trade of the pair
+`tokens[].dex.pairs[].ask` | Float | Current ask (sell) price of the pair on the order books
+`tokens[].dex.pairs[].bid` | Float | Current bid (buy) price of the pair on the order books
+`tokens[].dex.pairs[].mid` | Float | Current mid price of the pair on the order books
+`tokens[].dex.pairs[].spr` | Float | Current price spread between bid and ask prices
+`tokens[].dex.pairs[].hi24` | Float | Highest traded price of the pair within the period
+`tokens[].dex.pairs[].lo24` | Float | Lowest traded price of the pair within the period
+`tokens[].dex.pairs[].ago24` | Float | Price last traded 24 hours ago (rolling)
+`tokens[].dex.pairs[].pc24` | Float | Price change in percent from the price 24 hours ago (rolling)
+`tokens[].dex.pairs[].fx` | Float | USD fiat equivalent sum of all trades of this pair in the last rolling 24 hours
+`tokens[].dex.pairs[].count24` | Integer | Number of trades of this pair in the last rolling 24 hours
+
+
+
+#### Example returned data:
+```json
+{
+   "tokens": [
+      {
+         "currency": "USD",
+         "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+         "name": "Bitstamp USD",
+         "supply": 66956924,
+         "market_cap": 67369988,
+         "dex": {
+            "sum24": 3697128,
+            "fx24": 3710229.4243013225,
+            "price": 1.0061690928246487,
+            "count24": 1049,
+            "pairs": [
+               {
+                  "quote": "XRP",
+                  "vol_token": 3696703,
+                  "vol_quote": 9534078,
+                  "time": 1653582001,
+                  "last": 2.5152037780373253,
+                  "fx": 3709805.121005436,
+                  "bid": 2.5139844891,
+                  "ask": 2.5206369411,
+                  "mid": 2.5173107151,
+                  "spr": 0.006652452,
+                  "hi24": 2.6562030364266627,
+                  "lo24": 2.380952380952381,
+                  "ago24": 2.4876708046381366,
+                  "pc24": 1.11,
+                  "count24": 1045
+               },
+               {
+                  "quote": "CNY",
+                  "issuer": "rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y",
+                  "name": "RippleFox CNY",
+                  "vol_token": 181,
+                  "vol_quote": 1205,
+                  "time": 1653580582,
+                  "last": 6.65999999999999,
+                  "fx": 180.91095660379398,
+                  "bid": 6.66,
+                  "ask": 6.82221,
+                  "mid": 6.741105,
+                  "spr": 0.16221,
+                  "hi24": 6.65999999999999,
+                  "lo24": 6.65999999999999,
+                  "ago24": 6.659999999999614,
+                  "count24": 2
+               },
+               {
+                  "quote": "BTC",
+                  "issuer": "rchGBxcD1A1C2tdxF6papQYZ8kjRKMYcL",
+                  "name": "GateHub Bitcoin",
+                  "vol_token": 181,
+                  "vol_quote": 0.00621774,
+                  "time": 1653580582,
+                  "last": 0.0000343005035829973,
+                  "fx": 181.272593767661,
+                  "bid": 0.000010011212558065033,
+                  "ask": 0.00003398053545634613,
+                  "mid": 0.000015465917070579048,
+                  "spr": 0.00001419257292890581,
+                  "hi24": 0.0000343005035829973,
+                  "lo24": 0.0000343005035829973,
+                  "ago24": 0.000028184003834661707,
+                  "pc24": 17.83,
+                  "count24": 1
+               },
+               {
+                  "quote": "USD",
+                  "issuer": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+                  "name": "GateHub USD",
+                  "vol_token": 62.12,
+                  "vol_quote": 62.12,
+                  "time": 1653579980,
+                  "last": 1,
+                  "fx": 62.119745515061,
+                  "bid": 1,
+                  "ask": 1.0102235143962908,
+                  "mid": 1.0050857600782255,
+                  "spr": 98.81372248693705,
+                  "hi24": 1,
+                  "lo24": 1,
+                  "count24": 1
+               }
+            ],
+            "pc24":0.62
+         }
+      },
+      ...
+      {
+         "currency":"CSC",
+         "issuer":"rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr",
+         "name":"CasinoCoin",
+         "supply":64992453166,
+         "market_cap":43291147,
+         "dex":{
+            "sum24":24083073,
+            "fx24":15730.828657375625,
+            "price":0.0006660949774231682,
+            "count24":518,
+            "pairs":[
+               {
+                  "flags":1,
+                  "quote":"XRP",
+                  "vol_token":24083073,
+                  "vol_quote":39472,
+                  "time":1653581760,
+                  "last":0.0016393442622950817,
+                  "fx":15730.828657375625,
+                  "bid":0.0016393443,
+                  "ask":0.0016936304,
+                  "mid":0.0016664873,
+                  "spr":0.0000542861,
+                  "hi24":0.0017211531849988541,
+                  "lo24":0.0015850121596770262,
+                  "ago24":0.001585012125342759,
+                  "pc24":3.43,
+                  "count24":518
+               }
+            ],
+            "pc24":4.34
+         }
+      },
+      ...
+   ]
+}
+
+
 ```
 
 
