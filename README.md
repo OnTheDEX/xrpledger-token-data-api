@@ -15,8 +15,19 @@ https://api.onthedex.live/public/v1
 ```
 
 ## Things to know
-* All times in GMT
+* All times in GMT.
+* All responses are JSON format unless specified otherwise.
 
+
+## API Error trapping
+Only return status codes of `200` are valid; any other status code returned means the API did not function as intended for your request.  Additionally, having received a valid `200` return status code from your request, 
+always check the root JSON return object for the `error` property.  If set, this will be a string error code accompanied by a `message` property string explaining the error in more detail.  Example:
+```json
+{
+    "error": "ERROR_MAINTENANCE", 
+    "message": "The system is under maintenance for a short period.  Please try again later."
+}
+```
 
 ## Documentation
 Path | Description
