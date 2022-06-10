@@ -142,6 +142,14 @@ Property | Type | Description
 `pairs[].price_lo` | Float | The lowest price achieved across all trades of this pair
 `pairs[].price_hi_usd` | Float | The highest USD equivalent price achieved across all trades of this pair
 `pairs[].price_lo_usd` | Float | The lowest USD equivalent price achieved across all trades of this pair
+`pairs[].last` | Float | The price achieved on most recent trade of the pair
+`pairs[].ago24` | Float | The price last traded from (rolling) 24 hours ago
+`pairs[].pc24` | Float | The percentage change in price from (rolling) 24 hours ago to last traded
+`pairs[].trend` | String | Either `up` or `down` (or unspecified if new), reflecting the last trade direction from the trade immediately prior
+
+
+
+
 `pairs[].num_trades` | Integer | Total number of individual trades on this pair
 
 #### Example returned data:
@@ -243,6 +251,7 @@ Property | Type | Description
 `tokens[].dex.pairs[].pc24` | Float | Price change in percent from the price 24 hours ago (rolling)
 `tokens[].dex.pairs[].fx` | Float | USD fiat equivalent sum of all trades of this pair in the last rolling 24 hours
 `tokens[].dex.pairs[].count24` | Integer | Number of trades of this pair in the last rolling 24 hours
+`tokens[].dex.pairs[].trend` | String | Either `up` or `down` (or unspecified if new traded pair), reflecting the last trade direction from the trade immediately prior
 
 
 
