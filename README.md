@@ -119,7 +119,8 @@ https://api.onthedex.live/public/v1/daily/pairs?token=CSC.rCSCManTZ8ME9EoLrSHHYK
 #### GET parameters to specify:
 Parameter | Specification | Description
 --- | --- | ---
-`token` | String, optional | When not specified, returns complete list of traded pairs.  Note that this complete list includes inverted pairs (eg. TOKEN/USD.rhub and USD.rhub/TOKEN) with the same overall metrics for easier access to the pair you might want.  Be sure not to double-count such entries where relevant in your use case.  If `token` is specified as a concatenation of currency code and issuing account with a period `.` separator, returns only those pairs traded against the specified token.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`
+`token` | String, optional | When not specified, returns complete list of traded pairs.  Note that this complete list includes inverted pairs (eg. TOKEN/USD.rhub and USD.rhub/TOKEN) with the same overall metrics for easier access to the pair you might want.  Be sure not to double-count such entries where relevant in your use case.  If `token` is specified as a concatenation of currency code and issuing account with a period `.` separator, returns only those pairs traded against the specified token.  Examples: `CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr`, `XRP`.  If `token` is set to be `XRP`, tokens are always returned as the base currency with XRP as the quote currency.   If `token` is specified in conjuction with `quote` below, `token` is treated as the base currency request (including if set as XRP) and data will be returned in this configuration.
+`quote` | String, optional | If specified, must be used with `token` parameter and will limit the return data to be for this pairing only (`token`/`quote`).  Examples: `SOLO.rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz`, `XRP`.
 `by` | `volume` (traded volume in USD equivalent value), `trades` (number of trades) | Sorts the returned pairs by the parameter specified, in descending order.  Default: `volume`
 `page` | Integer | Data page number to return.  Default is page `1`.
 `per_page` | Integer | Maximum number of results to return for this page.  Default (and max) is `100`.
@@ -157,39 +158,24 @@ Property | Type | Description
 {
    "pairs": [
       {
-         "base": {
-            "currency": "USD",
-            "issuer": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq"
-         },
-         "quote": "XRP",
-         "price_hi": 2.1087858571580935,
-         "price_lo": 1.855793678329365,
-         "price_hi_usd": 1.0298888369188697,
-         "price_lo_usd": 0.9611753839564439,
-         "volume_base": 686448.7278266628,
-         "volume_quote": 1357644.3154369998,
-         "volume_usd": 685024.8424382539,
-         "num_trades": 735,
-         "price_mid": 1.961456419642908
-      },
-      {
-         "base": {
-            "currency": "SOLO",
-            "issuer": "rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz"
-         },
-         "quote": {
-             "currency": "USD",
-             "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
-         },
-         "price_hi": 0.3721380025654514,
-         "price_lo": 0.3494645474548932,
-         "price_hi_usd": 0.3721380025654514,
-         "price_lo_usd": 0.3494645474548932,
-         "volume_base": 439.0692277673208,
-         "volume_quote": 158.66133547013885,
-         "volume_usd": 158.66133547013885,
-         "num_trades": 6,
-         "price_mid": 0.3677465125912786
+        "base":{
+            "currency":"USD",
+            "issuer":"rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq"
+        },
+        "quote": "XRP",
+        "price_hi": 3.2871288176530022,
+        "price_lo": 2.747280225147826,
+        "price_hi_usd": 1.0121361553828967,
+        "price_lo_usd": 0.9893297283245092,
+        "volume_base": 696691.0645208354,
+        "volume_quote": 2032756.865624,
+        "volume_usd": 697858.4758794114,
+        "num_trades": 524,
+        "price_mid": 3.233545692446336,
+        "ago24": 2.865329512893983,
+        "pc24": 13.27,
+        "last": 3.245452115401085,
+        "trend": "down"
       },
       ...
    ]
