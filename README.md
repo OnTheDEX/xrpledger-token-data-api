@@ -135,14 +135,14 @@ Property | Type | Description
 `pairs[].quote` | String **or** Object | If quote currency is XRP, this contains the string `XRP`.  In all other cases, an object is returned with `currency` and `issuer` properties
 `pairs[].quote.currency` | String | Currency code of the quote token
 `pairs[].quote.issuer` | String | r-Address of the quote token issuer (not specified if quote = `XRP`)
-`pairs[].volume_base` | Float | Volume of the base token traded this pair
-`pairs[].volume_quote` | Float | Volume of the quote token traded this pair
-`pairs[].volume_usd` | Float | Volume of USD equivalent value traded this pair
+`pairs[].volume_base` | Float | Volume of the base token traded this pair in the last rolling 24 hours
+`pairs[].volume_quote` | Float | Volume of the quote token traded this pair in the last rolling 24 hours
+`pairs[].volume_usd` | Float | Volume of USD equivalent value traded this pair in the last rolling 24 hours
 `pairs[].price_mid` | Float | Current mid price on the order books of this pairing.  If no orders on both sides of the book for this pair, result is `null`
-`pairs[].price_hi` | Float | The highest price achieved across all trades of this pair
-`pairs[].price_lo` | Float | The lowest price achieved across all trades of this pair
-`pairs[].price_hi_usd` | Float | The highest USD equivalent price achieved across all trades of this pair
-`pairs[].price_lo_usd` | Float | The lowest USD equivalent price achieved across all trades of this pair
+`pairs[].price_hi` | Float | The highest price achieved across all trades of this pair in the last rolling 24 hours
+`pairs[].price_lo` | Float | The lowest price achieved across all trades of this pair in the last rolling 24 hours
+`pairs[].price_hi_usd` | Float | The highest USD equivalent price achieved across all trades of this pair in the last rolling 24 hours
+`pairs[].price_lo_usd` | Float | The lowest USD equivalent price achieved across all trades of this pair in the last rolling 24 hours
 `pairs[].last` | Float | The price achieved on most recent trade of the pair
 `pairs[].ago24` | Float | The price last traded from (rolling) 24 hours ago
 `pairs[].pc24` | Float | The percentage change in price from (rolling) 24 hours ago to last traded
