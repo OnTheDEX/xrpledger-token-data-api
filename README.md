@@ -226,7 +226,6 @@ Property | Type | Description
 `tokens[].dex.pairs[].vol_quote` | Number | Volume of this quote currency traded in the period against the token currency
 `tokens[].dex.pairs[].last` | Float | Price achieved on most recent trade of the pair
 `tokens[].dex.pairs[].time` | Integer, UNIX timestamp (seconds) | Time of most recent trade of the pair
-`tokens[].dex.pairs[].time` | Float | Time of most recent trade of the pair
 `tokens[].dex.pairs[].ask` | Float | Current ask (sell) price of the pair on the order books
 `tokens[].dex.pairs[].bid` | Float | Current bid (buy) price of the pair on the order books
 `tokens[].dex.pairs[].mid` | Float | Current mid price of the pair on the order books
