@@ -251,7 +251,6 @@ Property | Type | Description
 `tokens[].dex.pairs[].pc24` | Float | Price change in percent from the price 24 hours ago (rolling)
 `tokens[].dex.pairs[].fx` | Float | USD fiat equivalent sum of all trades of this pair in the last rolling 24 hours
 `tokens[].dex.pairs[].count24` | Integer | Number of trades of this pair in the last rolling 24 hours
-`tokens[].dex.pairs[].trend` | String | Either `up` or `down` (or unspecified if new traded pair), reflecting the last trade direction from the trade immediately prior
 
 
 
