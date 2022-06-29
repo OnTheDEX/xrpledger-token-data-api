@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+    // use vanilla JS because why not
+    window.addEventListener("load", function() {
+        
+        let stringMessage = ''
+        const separator = "\n" + '='.repeat(30) + "\n";
+        const log = document.getElementById('log');
+
+        // create websocket instance
+        var mySocket = new WebSocket("wss://api.onthedex.live/public/v1/ticker/SOLO.rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz:XRP");
+
+        mySocket.onopen = function(e) {
+            console.log('Websocket connection OPENED OK.');
+        };
+
+        mySocket.onmessage = function(e) {
+            // log the received data to page
+            log.value += "Raw data packet incoming is:" + "\n" + e.data.toString() + separator;
+
+            // convert data string into useful JSON
+            const token_data = JSON.parse(e.data);
+
+            // always check there is no token_data.error first
+            if (!token_data.error) {
+                
+                // all good, so access .pairs array for the data on the token(s) requested
+                token_data.pairs && token_data.pairs.forEach(pair => {
+                    const theBaseCurrency = (pair.b.c ? pair.b.c : pair.b);
+                    const theQuoteCurrency = (pair.q.c ? pair.q.c : pair.q);
+                    stringMessage = 'Token pair ' + theBaseCurrency + '/' + theQuoteCurrency + ' was last traded at a price of ' + pair.l + ' ' + theQuoteCurrency;
+                    console.log(stringMessage);
+                    log.value += stringMessage + separator;
+                })
+
+                // if no pairs, then we probably have a "watching" ping message
+                if (token_data.ping) {
+                    stringMessage = 'Ping received from API, with status of ' + token_data.status + ' and message of ' + token_data.message;
+                    console.log(stringMessage);
+                    log.value += stringMessage + separator;
+                }
+                
+            } else {
+
+                stringMessage = 'There was an error returned from the websocket API: ' + token_data.error + token_data.message;
+                console.log(stringMessage);
+                log.value += stringMessage + separator;
+
+            }
+
+            // in any case, scroll the log textarea to the bottom so we always see latest msg
+            setInterval(() => {
+                log.scrollTop = log.scrollHeight;
+            }, 500);
+        };
+
+        mySocket.onclose = function(e) {
+            console.log('Websocket closed.')
+            if (e.wasClean) {
+                console.log('Clean close.');
+                console.log(e.code);
+                console.log(e.reason);
+            } else {
+                console.log('Connection ended.');
+                console.log(e.code);
+            }
+        };
+
+    });
+</script>
+</head>
+<body>
+    Open your console for messages too.
+
+    <h1>WebSocket example</h1>
+    <textarea id="log" cols="80" rows="60"></textarea>
+</body>
+</html>

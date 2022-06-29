@@ -8,10 +8,17 @@ This API offers accurate and up-to-date token trading data for all tokens traded
 * Projects needing specific token data such as trading volume, current price, or historic OHLC price data.
 * Personal projects eg. importation of token data into your portfolio tracking spreadsheets using Excel or Google Sheets, for example.
 
-## Endpoint for access
-The endpoint to use is:
+Methods are available for static data retrieval via HTTP `GET` and `POST` methods, and some data is also available streamed via `WEBSOCKET` connections.
+
+## Endpoints for access
+The HTTP endpoint to use for `GET` and `POST` requests is:
 ```
 https://api.onthedex.live/public/v1
+```
+
+The `WEBSOCKET` endpoint to use for websocket paths is:
+```
+wss://api.onthedex.live/public/v1
 ```
 
 ## Things to know
@@ -29,17 +36,145 @@ always check the root JSON return object for the `error` property.  If set, this
 }
 ```
 
+
+## Websocket specifics
+When using the websocket versions of some endpoint paths described below, there are 3 possible outcomes:
+- an error message with `error` property; or 
+- a `ping` property with other details denoting current status at the server level of this channel; or
+- a proper data packet as described below for each websocket endpoint path. 
+
+### Websocket ping messages
+When there is no `error` and no changed data needing to be sent to you, a `ping` message will be sent to signify that the connection is still alive and the current status of the channel on watch at the server.
+(There is no need to send a ping request to the server from your client.)
+
+Property | Type | Description
+--- | --- | ---
+`ping` | Integer | Timestamp of ping event from server
+`channel` | String | Path of the channel this websocket is listening on for data
+`status` | String | Current status of this channel (for example: `watching`) means the channel is alive and watching for property changes to transmit to you
+`message` | String | Other descriptive data (for example: `no change`) means no change in the dataset was detected since you last received a valid dataset
+
+
+
 ## Documentation
-Path | Description
+Path | Methods | Description
 --- | ---
-[`/daily/tokens`](#get-dailytokens) | Headline Daily Token Data for top 100 traded tokens by volume, market cap or number of trades.
-[`/daily/pairs`](#get-dailypairs) | Headline Daily Traded Pair Data by volume or number of trades.
-[`/aggregator`](#getpost-aggregator) | Aggregator data for all tokens traded in the last rolling 24 hours, including token metrics, fiat USD equivalent pricing and volumes, and individual token pairing data.
-[`/ohlc`](#get-ohlc) | Candlestick chart data including Open/High/Low/Close price data, base and quote volumes, for varying intervals.
+[`/ticker/:tokens_or_pairs`](#ticker) | `GET`, `WEBSOCKET` | Latest ticker information for a given token, pairing or group of pairs.
+[`/daily/tokens`](#get-dailytokens) | `GET` | Headline Daily Token Data for top 100 traded tokens by volume, market cap or number of trades.
+[`/daily/pairs`](#get-dailypairs) | `GET` | Headline Daily Traded Pair Data by volume or number of trades.
+[`/aggregator`](#getpost-aggregator) | `GET`, `POST` | Aggregator data for all tokens traded in the last rolling 24 hours, including token metrics, fiat USD equivalent pricing and volumes, and individual token pairing data.
+[`/ohlc`](#get-ohlc) | `GET` | Candlestick chart data including Open/High/Low/Close price data, base and quote volumes, for varying intervals.
 
 ---
 
 # Data Paths
+
+## `GET` or `WEBSOCKET`: `/ticker/:tokens_or_pairs`
+Returns data for the specified tokens, pairs or (if `:token_or_pairs` is unspecified) a list of latest traded tokens within the last rolling 24 hours.
+
+If a single token is requested, either as a base (`/ticker/TOKEN.ISSUER`) or as a quote (`/ticker/:TOKEN.ISSUER`), the server will return all pairs traded against the token in the last 24 hours.
+
+If a specific pair (or pairs) is requested, those specific pair(s) are returned irrespective of whether they have traded in the last rolling 24 hours or not.
+The difference will be in the `volume_base` and `volume_quote` properties which will be 0 (zero) if not traded in the last 24 hours, together with a `time` property that represents a time earlier than 24 hours ago.
+
+#### Example `GET`:
+To return data for all pairs recently traded in the last rolling 24 hours...
+```
+    // ...with SOLO as the base currency:
+    https://api.onthedex.live/public/v1/ticker/SOLO.rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz
+
+    // ... with SOLO as the quote currency:
+    https://api.onthedex.live/public/v1/ticker/:SOLO.rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz
+
+    // ... for all pairs (no specific token filter):
+    https://api.onthedex.live/public/v1/ticker
+```
+
+To return a specific pair or pairs (returning most recent trade data even if outside of 24 hours):
+```
+    // ...for CSC/XRP only:
+    https://api.onthedex.live/public/v1/ticker/CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr:XRP
+    
+    // for XRP/CSC only:
+    https://api.onthedex.live/public/v1/ticker/XRP:CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr
+
+    // for SOLO/XRP and CSC/XRP (2 pairs in one request):
+    https://api.onthedex.live/public/v1/ticker/CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr:XRP+SOLO.rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz:XRP
+```
+
+Other options are available as specified below to format responses in a preferred way.
+
+
+#### Example `WEBSOCKET`:
+Websocket data is available as above except via the websocket endpoint beginning `wss://`.  Data packets will be returned approximately every 4 seconds.
+```
+// create websocket instance
+var mySocket = new WebSocket("wss://api.onthedex.live/public/v1/ticker/CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr:XRP");
+
+// add event listener for receiving data from the API
+mySocket.onmessage = function (event) {
+    const token_data = JSON.parse(event.data);
+    // always check there is no token_data.error first
+    if (!token_data['error']) {
+        // all good, so access .pairs array for the data on the token(s) requested
+        token_data.pairs && token_data.pairs.forEach(pair => {
+            const theBaseCurrency = (pair.b.c ? pair.b.c : pair.b);
+            const theQuoteCurrency = (pair.q.c ? pair.q.c : pair.q);
+            stringMessage = 
+            console.log('Token pair ' + theBaseCurrency + '/' + theQuoteCurrency + ' was last traded at a price of ' + pair.l + ' ' + theQuoteCurrency);
+        });
+    } else {
+        console.log('There was an error returned from the websocket API:', token_data.error, token_data.message);
+    }
+};
+```
+
+
+#### Parameters to specify:
+These parameters are valid for both `GET` and `WEBSOCKET` requests:
+
+Parameter | Specification | Description
+--- | --- | ---
+`by` | `volume` (traded volume in USD equivalent value, descending), `trades` (number of trades, descending), `base` (base currency code, ascending) | Sorts the returned pairs by the parameter specified.  Default: `volume`
+`page` | Integer | Data page number to return.  Default is page `1`.
+`per_page` | Integer | Maximum number of results to return for this page.  Default (and max) is `100`.
+
+
+#### Returned properties:
+Remember to always check the `error` property first before attempting to process any of the below returned parameters.
+
+Property (`GET`) | Property (`WEBSOCKET`) | Type | Description
+--- | --- | ---
+`pairs` | `pairs` | Array | List of pairings returned
+`pairs[].base` | `pairs[].b` | Object | If base currency is XRP, this contains the string `XRP`.  In all other cases, an object is returned with `currency` and `issuer` properties
+`pairs[].base.currency` | `pairs[].b.c` | String | Currency code of the base token
+`pairs[].base.issuer` | `pairs[].b.i` |String | r-Address of the base token issuer
+`pairs[].quote` | `pairs[].q` | String **or** Object | If quote currency is XRP, this contains the string `XRP`.  In all other cases, an object is returned with `currency` and `issuer` properties
+`pairs[].quote.currency` | `pairs[].q.c` | String | Currency code of the quote token
+`pairs[].quote.issuer` | `pairs[].q.i` | String | r-Address of the quote token issuer (not specified if quote = `XRP`)
+`pairs[].volume_base` | `pairs[].vb` | Float | Volume of the base token traded this pair in the last rolling 24 hours
+`pairs[].volume_quote` | `pairs[].vq` | Float | Volume of the quote token traded this pair in the last rolling 24 hours
+`pairs[].volume_usd` | `pairs[].vfx` | Float | Volume of USD equivalent value traded this pair in the last rolling 24 hours
+`pairs[].price_mid` | `pairs[].pm` | Float | Current mid price on the order books of this pairing.  If no orders on both sides of the book for this pair, result is `null`
+`pairs[].price_hi` | `pairs[].ph` | Float | The highest price achieved across all trades of this pair in the last rolling 24 hours
+`pairs[].price_lo` | `pairs[].pl` | Float | The lowest price achieved across all trades of this pair in the last rolling 24 hours
+`pairs[].last` | `pairs[].l` | Float | The price achieved on most recent trade of the pair
+`pairs[].time` | `pairs[].t` | Integer, UNIX timestamp (seconds) | Time of most recent trade of the pair
+`pairs[].ago24` | `pairs[].a24` | Float | The price last traded from (rolling) 24 hours ago
+`pairs[].pc24` | `pairs[].pc24` | Float | The percentage change in price from (rolling) 24 hours ago to last traded
+`pairs[].trend` | `pairs[].tr` | String | Either `up` or `down` (or unspecified if new), reflecting the last trade direction from the trade immediately prior.  If not determined, this property will be missing.
+`pairs[].num_trades` | `pairs[].n` | Integer | Total number of individual trades on this pairing in the last rolling 24 hours
+
+#### Websocket specifics:
+Websocket returned property names are shortened from their REST equivalents as detailed above.
+Websocket version will return a data packet every ledger close (approx every 4 seconds) and the returned data will vary depending if changes from the initial connecting request were detected.
+
+When connecting to the websocket version of this endpoint, be aware that the server will return a `pairs` array of data for any property that has changed since the last `pairs` packet - this may not necessarily be the `l` (`last`) price that has changed.
+It could be that the rolling 24 hours calculation has changed, for example, triggering the sending of a data packet to your connection.
+Any property that has changed will trigger data for the whole request to be sent to you (that is, a change in any property of 1 pair will mean data for all your requested pairs will be sent, not just for the changed pair).
+
+
+
 
 ## `GET`: `/daily/tokens`
 Returns a **list of tokens traded** on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.  Max returned items is 100, which in combination with the `by` parameter, allows getting the top 100 by volume, market cap, or trade count.
