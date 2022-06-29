@@ -107,7 +107,7 @@ Other options are available as specified below to format responses in a preferre
 
 #### Example `WEBSOCKET`:
 Websocket data is available as above except via the websocket endpoint beginning `wss://`.  Data packets will be returned approximately every 4 seconds.
-```
+```javascript
 // create websocket instance
 var mySocket = new WebSocket("wss://api.onthedex.live/public/v1/ticker/CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr:XRP");
 
