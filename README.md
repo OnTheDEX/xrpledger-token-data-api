@@ -58,14 +58,14 @@ Property | Type | Description
 
 ## Documentation
 Path | Methods | Description
---- | ---
-[`/ticker/:tokens_or_pairs`](#ticker) | `GET`, `WEBSOCKET` | Latest ticker information for a given token, pairing or group of pairs.
+--- | --- | ---
+[`/ticker/:tokens_or_pairs`](#get-or-websocket-tickertokens_or_pairs) | `GET`, `WEBSOCKET` | Latest ticker information for a given token, pairing or group of pairs.
 [`/daily/tokens`](#get-dailytokens) | `GET` | Headline Daily Token Data for top 100 traded tokens by volume, market cap or number of trades.
 [`/daily/pairs`](#get-dailypairs) | `GET` | Headline Daily Traded Pair Data by volume or number of trades.
 [`/aggregator`](#getpost-aggregator) | `GET`, `POST` | Aggregator data for all tokens traded in the last rolling 24 hours, including token metrics, fiat USD equivalent pricing and volumes, and individual token pairing data.
 [`/ohlc`](#get-ohlc) | `GET` | Candlestick chart data including Open/High/Low/Close price data, base and quote volumes, for varying intervals.
 
----
+
 
 # Data Paths
 
