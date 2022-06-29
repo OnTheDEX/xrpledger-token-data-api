@@ -144,7 +144,7 @@ Parameter | Specification | Description
 Remember to always check the `error` property first before attempting to process any of the below returned parameters.
 
 Property (`GET`) | Property (`WEBSOCKET`) | Type | Description
---- | --- | ---
+--- | --- | --- | ---
 `pairs` | `pairs` | Array | List of pairings returned
 `pairs[].base` | `pairs[].b` | Object | If base currency is XRP, this contains the string `XRP`.  In all other cases, an object is returned with `currency` and `issuer` properties
 `pairs[].base.currency` | `pairs[].b.c` | String | Currency code of the base token
