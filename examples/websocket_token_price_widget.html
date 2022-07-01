@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+
+    // SET THESE CONSTANTS TO YOUR CHOSEN PAIR THAT YOU WANT PRICE DATA FOR:
+    const base_currency = "CSC";
+    const base_issuer = "rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr";
+    const quote_currency = "XRP";
+    const quote_issuer = "";
+
+    // we will round price to 6 DP for this pair
+    const round_to_decimal_places = 6;
+
+    // this is the endpoint we will connect to later
+    const websocket_endpoint = "wss://api.onthedex.live/public/v1";
+
+    // this is a flag set once when we first successfully connect
+    let connection_established = false;
+
+    // THIS IS THE MEAT OF THE OPERATION:
+    // only start the websocket connection after page is fully loaded...
+    window.addEventListener("load", function() {
+        
+        // get the various DOM elements ready to output some messages
+        const dom_token_pair = document.getElementById('token_pair');
+        const dom_token_price = document.getElementById('token_price');
+        const dom_error = document.getElementById('error');
+
+        // dynamically set the DOM element containing the base and quote currencies so we only have to set it in one place (javascript, not HTML)
+        dom_token_pair.innerHTML = base_currency + '/' + quote_currency;
+
+        // var to hold reconnecting timer ID
+        let reconnectTimerId = null
+
+        // CREATE A FUNCTION to connect to the websocket API and reconnect on dropping the connection for whatever reason...
+        const connectToWebsocket = () => {
+            console.log('Attempting connection to websocket API...')
+            // create websocket instance
+            var mySocket = new WebSocket(websocket_endpoint + "/ticker/" + base_currency + (base_issuer ? '.' + base_issuer : '') + ':' + quote_currency + (quote_issuer ? '.' + quote_issuer : ''));
+
+            // say we are trying to connect if we haven't successfully connected at all yet
+            if (!connection_established) {
+                dom_error.innerHTML = 'Trying to connect...';
+                dom_error.style.display = "inline";
+            }
+
+
+            // wait for 1 second - if we haven't connected before then, destroy this socket so that a queue doesn't build up
+            setTimeout(() => {
+                // not connected yet, so destroy it and await another reconnect timer event
+                if (mySocket.readyState == 0) {
+                    mySocket.close()
+                    delete mySocket;
+                }
+            }, 800);
+
+            // on successful opening of ws connection we must clear any reconnect timer already running
+            mySocket.onopen = function(e) {
+                clearInterval(reconnectTimerId);
+                connection_established = true;
+                // say that we are waiting on first price info
+                dom_token_price.innerHTML = '...waiting...';
+                dom_error.style.display = "none";
+            };
+
+            // on receiving websocket data packets, process them...
+            mySocket.onmessage = function(e) {
+                // convert data string into useful JSON
+                const token_data = JSON.parse(e.data);
+
+                // always check there is no token_data.error first
+                if (!token_data.error) {
+                    // hide any previous error
+                    dom_error.style.display = "none";
+                    // all good, so set price into DOM element for token price
+                    if (token_data.pairs) {
+                        // show the last price (.l) of the only pair (index 0) returned
+                        dom_token_price.innerHTML = Number(token_data.pairs[0].l).toFixed(round_to_decimal_places)
+                    }
+                } else {
+                    // there was an error from the API so output that message (or not, depending on what you want to show)
+                    dom_error.innerHTML = token_data.message;
+                    dom_error.style.display = "none";
+                }
+            };
+
+            // if the ws connection closes for whatever reason, attempt automatic reconnect by triggering the 1 second connection timer again
+            mySocket.onclose = function(e) {
+                // clear current price if shown
+                dom_token_price.innerHTML = '';
+                // show error line if we had a connection but it broke
+                if (connection_established) {
+                    dom_error.innerHTML = 'Websocket terminated.';
+                    dom_error.style.display = "inline";
+                }
+
+                // start a timer to attempt reconnection automatically every 1 second
+                clearInterval(reconnectTimerId);
+                reconnectTimerId = setInterval(() => {
+                    connectToWebsocket();
+                }, 1000);
+            };
+        };
+
+        // now we must call it once to kick-start the connection process
+        connectToWebsocket();
+
+    });
+</script>
+</head>
+
+    <body>
+        <!-- change this html and apply your own styling as required -->
+        <h1>Token Price of <span id="token_pair" style="color: green;"><!-- your token pair will show here automatically --></span> is</h1>
+        <h2 id="token_price" style="color: blue;"><!-- this is where the price will be inserted automatically --></h2>
+        <span id="error" style="display: none; background-color: red; color: white; padding: 2px 10px;"><!-- this is where any errors from the price feed will show --></span>
+    </body>
+
+</html>
