@@ -120,7 +120,6 @@ mySocket.onmessage = function (event) {
         token_data.pairs && token_data.pairs.forEach(pair => {
             const theBaseCurrency = (pair.b.c ? pair.b.c : pair.b);
             const theQuoteCurrency = (pair.q.c ? pair.q.c : pair.q);
-            stringMessage = 
             console.log('Token pair ' + theBaseCurrency + '/' + theQuoteCurrency + ' was last traded at a price of ' + pair.l + ' ' + theQuoteCurrency);
         });
     } else {
