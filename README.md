@@ -24,6 +24,7 @@ wss://api.onthedex.live/public/v1
 ## Things to know
 * All times in GMT.
 * All responses are JSON format unless specified otherwise.
+* Rate limits apply to all requests and are subject to fair use in our determination.  Normal use of this API should not trigger rate limits on your application, but if you need higher levels of access, feel free to contact us: `info@onthedex.live`.
 
 
 ## API Error trapping
@@ -56,7 +57,7 @@ Property | Type | Description
 
 
 
-## Documentation
+# Documentation
 Path | Methods | Description
 --- | --- | ---
 [`/ticker/:tokens_or_pairs`](#get-or-websocket-tickertokens_or_pairs) | `GET`, `WEBSOCKET` | Latest ticker information for a given token, pairing or group of pairs.
@@ -65,6 +66,9 @@ Path | Methods | Description
 [`/aggregator`](#getpost-aggregator) | `GET`, `POST` | Aggregator data for all tokens traded in the last rolling 24 hours, including token metrics, fiat USD equivalent pricing and volumes, and individual token pairing data.
 [`/ohlc`](#get-ohlc) | `GET` | Candlestick chart data including Open/High/Low/Close price data, base and quote volumes, for varying intervals.
 
+
+## Examples
+The `examples` folder contains some Javascript code examples for certain endpoints.
 
 
 # Data Paths
