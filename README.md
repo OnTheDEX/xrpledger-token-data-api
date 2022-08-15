@@ -61,6 +61,7 @@ Property | Type | Description
 Path | Methods | Description
 --- | --- | ---
 [`/ticker/:tokens_or_pairs`](#get-or-websocket-tickertokens_or_pairs) | `GET`, `WEBSOCKET` | Latest ticker information for a given token, pairing or group of pairs.
+[`/token/meta/:tokens](#getpost-tokenmetatokens) | `GET`, `POST` | Metadata for a given token(s).
 [`/daily/tokens`](#get-dailytokens) | `GET` | Headline Daily Token Data for top 100 traded tokens by volume, market cap or number of trades.
 [`/daily/pairs`](#get-dailypairs) | `GET` | Headline Daily Traded Pair Data by volume or number of trades.
 [`/aggregator`](#getpost-aggregator) | `GET`, `POST` | Aggregator data for all tokens traded in the last rolling 24 hours, including token metrics, fiat USD equivalent pricing and volumes, and individual token pairing data.
@@ -179,6 +180,77 @@ Any property that has changed will trigger data for the whole request to be sent
 
 
 
+
+## `GET`/`POST`: `/token/meta/:tokens`
+Returns any metadata known for the token(s) specified (for example, token official name and path to logo file).  Single tokens can be requested by simple GET request.  Multiple tokens can be requested either by concatenating tokens with `+` character or
+using `POST` method to submit array of strings or token objects (see below).
+
+#### GET Example (single token):
+```
+https://api.onthedex.live/public/v1/token/meta/CSC.rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr
+```
+
+#### POST Examples (multiple tokens):
+```javascript
+// Pass array of token strings:
+const tokenData = await axios.post(`https://api.onthedex.live/public/v1/token/meta`, {
+    tokens: [
+        'rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr.CSC', 
+        'SOLO.rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz'
+    ]
+})
+
+// Or pass array of token objects with issuer and currency properties:
+const tokenData = await axios.post(`https://api.onthedex.live/public/v1/token/meta`, {
+    tokens: [
+        {
+            issuer: 'rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr',
+            currency: 'CSC'
+        },
+        {
+            issuer: 'rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz',
+            currency: 'SOLO'
+        }
+    ]
+})
+```
+
+#### GET path to specify:
+The `:tokens` part of the path should be the currency code and issuer joined by a period `.` (see example above).  Multiple tokens can be requested by separating tokens with a `+` character.
+
+#### Returned properties:
+Property | Type | Description
+--- | --- | ---
+`meta` | Array | List of tokens and their metadata found.
+`meta[].currency` | String | Requested currency code of the token
+`meta[].issuer` | String | Requested r-Address of the token issuer
+`meta[].token_name` | String | Official name of the token, if known
+`meta[].logo_file` | String | URL to scalable vector logo of the token, if known
+
+If the token has no name or logo, these properties will be missing from the returned results.  Note: no check of token validity is made - if the token does not exist, your results will contain just the currency and issuer properties as requested.
+
+#### Example returned data:
+```json
+{
+    "meta":[
+        {
+            "currency": "CSC",
+            "issuer": "rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr",
+            "token_name": "CasinoCoin",
+            "logo_file": "https://www.onthedex.live/tokens/logo/csc_rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr.svg"
+        },
+        {
+            "currency": "SOLO",
+            "issuer": "rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz",
+            "token_name": "Sologenic",
+            "logo_file": "https://www.onthedex.live/tokens/logo/solo_rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz.svg"
+        }
+    ]
+}
+```
+
+
+
 ## `GET`: `/daily/tokens`
 Returns a **list of tokens traded** on the XRP Ledger DEX at any time within the last rolling 24 hours, together with their key metrics.  Max returned items is 100, which in combination with the `by` parameter, allows getting the top 100 by volume, market cap, or trade count.
 
@@ -211,6 +283,7 @@ Property | Type | Description
 `tokens[].last_trade_at` | ISO Timestamp | Date and time (in GMT) of the last trade of this token across all its pairs
 `tokens[].num_trades` | Integer | Total number of individual trades on this token across all its pairs
 `tokens[].supply` | Float | Total number of tokens under supply obligation by the issuing account
+`tokens[].logo_file` | String | URL to scalable vector logo of the token, if known
 
 #### Example returned data:
 ```json
@@ -226,7 +299,8 @@ Property | Type | Description
             "supply": 32698516.82373998,
             "token_name": "Bitstamp USD",
             "volume_token": 774648.164521166,
-            "volume_usd": 776031.2081952752
+            "volume_usd": 776031.2081952752,
+            "logo_file": "https://www.onthedex.live/tokens/logo/usd_rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B.svg"
         },
         {
             "currency": "SOLO",
@@ -238,7 +312,8 @@ Property | Type | Description
             "supply": 399598591.6977495,
             "token_name": "Sologenic",
             "volume_token": 1487728.1869581435,
-            "volume_usd": 544250.4805697609
+            "volume_usd": 544250.4805697609,
+            "logo_file": "https://www.onthedex.live/tokens/logo/solo_rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz.svg"
         },
         ...
     ]
@@ -350,6 +425,7 @@ Property | Type | Description
 `tokens[].name` | String | Official name of the token, if known
 `tokens[].supply` | Float | Total number of tokens under supply obligation by the issuing account
 `tokens[].market_cap` | Integer | Market capitalization of the token in USD based on current mid price and issued suppy of the token
+`tokens[].logo_file` | String | URL to scalable vector logo of the token, if known
 `tokens[].dex` | Object | Information on the DEX specific trades for this token
 `tokens[].dex.price` | Float | XRPL DEX current mid price in USD fiat equivalent for the token via most liquid pairing
 `tokens[].dex.pc24` | Float | USD fiat equivalent price change in percent from the price 24 hours ago (rolling)
@@ -387,6 +463,7 @@ Property | Type | Description
          "name": "Bitstamp USD",
          "supply": 66956924,
          "market_cap": 67369988,
+         "logo_file": "https://www.onthedex.live/tokens/logo/usd_rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B.svg",
          "dex": {
             "sum24": 3697128,
             "fx24": 3710229.4243013225,
@@ -475,6 +552,7 @@ Property | Type | Description
          "name":"CasinoCoin",
          "supply":64992453166,
          "market_cap":43291147,
+         "logo_file": "https://www.onthedex.live/tokens/logo/csc_rCSCManTZ8ME9EoLrSHHYKW8PPwWMgkwr.svg",
          "dex":{
             "sum24":24083073,
             "fx24":15730.828657375625,
